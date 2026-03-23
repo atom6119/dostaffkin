@@ -2,7 +2,8 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "cli": {
-    "packageManager": "npm"
+    "packageManager": "npm",
+    "analytics": "3ee62d66-c1e4-43ea-afb4-5d039c962d1c"
   },
   "newProjectRoot": "projects",
   "projects": {
@@ -18,12 +19,21 @@
           "options": {
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
-            "outputPath": {"base": "docs","browser": ""},
+            "outputPath": {
+              "base": "docs",
+              "browser": ""
+            },
             "baseHref": "/dostaffkin/",
             "assets": [
               {
                 "glob": "**/*",
-                "input": "public"
+                "input": "public",
+                "output": "/"
+              },
+              {
+                "glob": "**/*",
+                "input": "docs/images",
+                "output": "/images"
               }
             ],
             "styles": [

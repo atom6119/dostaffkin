@@ -1,0 +1,156 @@
+<div id="map"></div>
+
+<app-header />
+
+<aside class="main" id="sidebar">
+    <div class="main-header">
+        <div class="main-title">Оформление доставки</div>
+        <div class="main-text">Выберите параметры для расчета отправления</div>
+    </div>
+
+    <div class="main-content">
+        <!-- Маршрут -->
+        <div class="main-route">
+            <div class="main-block-title">Маршрут</div>
+            <div class="main-fields">
+                <div class="main-field" id="fromField">
+                    <div class="main-pin"></div>
+                    <input id="from" placeholder="Откуда: начните вводить адрес" autocomplete="off"
+                        [formControl]="fromControl" (input)="onFromChange()" />
+                    <div class="main-ac" id="fromAc" role="listbox" aria-label="Подсказки адресов"></div>
+                </div>
+
+                <div class="main-field" id="toField">
+                    <div class="main-pin"></div>
+                    <input id="to" placeholder="Куда: начните вводить адрес" autocomplete="off"
+                        [formControl]="toControl" (input)="onToChange()" />
+                    <div class="main-ac" id="toAc" role="listbox" aria-label="Подсказки адресов"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Размер посылки -->
+        <div class="main-package">
+            <div class="main-block-title">Размер посылки</div>
+
+            <div class="main-sizes">
+                <button class="main-size-card" *ngFor="let size of sizes" type="button"
+                    [class.is-active]="size.value === selectedSize" (click)="selectSize(size.value)">
+                    <div class="main-size-top">
+                        <div class="main-size-label">{{ size.value.toUpperCase() }}</div>
+                        <div class="main-size-rate">{{ size.rate }} ₽/км</div>
+                    </div>
+                    <div class="main-size-media" [ngClass]="size.mediaClass">
+                        <img [src]="'/images/sizes/' + size.value + '.png'"
+                            [alt]="'Короб ' + size.value.toUpperCase()" />
+                    </div>
+                    <div class="main-size-description" [innerHTML]="size.description"></div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Скорость доставки -->
+        <div class="main-package">
+            <div class="main-block-title">Скорость доставки</div>
+
+            <div class="main-speed">
+                <button class="main-speed-card" *ngFor="let speed of speeds" type="button"
+                    [class.is-active]="speed.value === selectedSpeed" (click)="selectSpeed(speed.value)">
+
+
+                    <img [src]="speed.value === 'regular'?'/images/sizes/vel0.png':'/images/sizes/vel1.png'" [alt]="speed.label" />
+
+
+
+
+
+
+                    <span class="main-speed-description">{{ speed.label }}</span>
+                </button>
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+
+        <!-- Кнопка рассчитать -->
+        <div class="main-calculate-block">
+            <button id="calc" class="button calculate-button" type="button" [disabled]="!canCalculate"
+                (click)="calculate()">
+                Рассчитать
+            </button>
+        </div>
+
+        <!-- Результаты -->
+        <div class="main-result" id="result">
+            <div class="main-result-title">Расчеты вашего заказа</div>
+            <div class="main-result-lines">
+                <div class="main-result-line">
+                    <span>Расстояние</span>
+                    <span>{{ calculationResult()?.distance || '—' }}</span>
+                </div>
+                <div class="main-result-line">
+                    <span>Доставим через</span>
+                    <span>{{ calculationResult()?.duration || '—' }}</span>
+                </div>
+                <div class="main-result-line">
+                    <span>Тариф</span>
+                    <span>{{ calculationResult()?.rate || '—' }}</span>
+                </div>
+            </div>
+            <div class="main-price">
+                <div class="main-price-label">Итого</div>
+                <div class="main-price-value">
+                    {{ calculationResult()?.total || '—' }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Форма заявки -->
+        <div class="main-order-box">
+            <div class="main-order-form" id="orderForm" [formGroup]="orderForm">
+                <div class="main-order-title">Оформление доставки</div>
+
+                <div class="main-block-info-row">
+                    <div class="main-block-title">Контакты</div>
+                    <div class="order-fields">
+                        <div class="main-field">
+                            <input id="customerName" placeholder="Ваше имя" autocomplete="off" formControlName="name" />
+                        </div>
+                        <div class="main-field">
+                            <input id="customerPhone" placeholder="Ваш телефон" autocomplete="off" inputmode="tel"
+                                formControlName="phone" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="main-block-info-row extra-info">
+                    <div class="main-block-title">Дополнительная информация</div>
+                    <div class="main-field textarea">
+                        <textarea id="comment" placeholder="Детали доставки и комментарии"
+                            formControlName="comment"></textarea>
+                    </div>
+                </div>
+
+                <button id="submit" class="button main-submit-request" type="button" [disabled]="!canSubmit"
+                    (click)="submitOrder()">
+                    Отправить заявку
+                </button>
+            </div>
+
+            <div class="main-order-success" id="orderSuccess" *ngIf="orderId()">
+                <div class="main-success-icon">✓</div>
+                <div class="main-success-title">Заявка отправлена!</div>
+                <div class="main-success-title">
+                    Номер отправления – <span>{{ orderId() }}</span>
+                </div>
+                <div class="main-success-subtitle">Мы скоро свяжемся с вами</div>
+            </div>
+        </div>
+    </div>
+</aside>
